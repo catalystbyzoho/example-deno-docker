@@ -1,4 +1,8 @@
-import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+// Minimal Deno global declaration for local tooling; runtime provides real value.
+declare const Deno: {
+  env: { get(key: string): string | undefined };
+  serve: (...args: any[]) => any;
+};
 
 interface Item {
   id: string;
@@ -125,7 +129,11 @@ function handleRoot(): Response {
   `;
 
   return new Response(html, {
-    headers: { "Content-Type": "text/html" },
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Content-Encoding": "identity",
+      "Vary": "Accept-Encoding",
+    },
   });
 }
 
@@ -200,9 +208,14 @@ async function handler(request: Request): Promise<Response> {
   return jsonResponse({ error: "Endpoint not found" }, 404);
 }
 
-// Start the server
-const port = Deno.env.get("PORT") || "9000";
-console.log(`🚀 Server running on http://localhost:${port}`);
+// Start the server (Using Native Deno.serve)
+const port = parseInt(Deno.env.get("PORT") || "9000");
 
-serve(handler, { port: parseInt(port) });
-
+// Deno.serve returns a server instance, but we can just let it run
+Deno.serve({ 
+    port, 
+    hostname: "0.0.0.0",
+    onListen: ({ port, hostname }) => {
+        console.log(`🚀 Server running on http://${hostname}:${port}`);
+    }
+}, handler);

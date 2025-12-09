@@ -12,4 +12,3 @@ EXPOSE 9000
 
 # Run the server
 CMD ["run", "--allow-net", "--allow-env", "server.ts"]
-
