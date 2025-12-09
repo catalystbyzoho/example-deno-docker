@@ -8,7 +8,7 @@ WORKDIR /app
 COPY server.ts .
 
 # Expose the port
-EXPOSE 8000
+EXPOSE 9000
 
 # Run the server
 CMD ["run", "--allow-net", "--allow-env", "server.ts"]

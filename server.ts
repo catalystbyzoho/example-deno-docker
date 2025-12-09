@@ -201,7 +201,7 @@ async function handler(request: Request): Promise<Response> {
 }
 
 // Start the server
-const port = Deno.env.get("PORT") || "8000";
+const port = Deno.env.get("PORT") || "9000";
 console.log(`🚀 Server running on http://localhost:${port}`);
 
 serve(handler, { port: parseInt(port) });
